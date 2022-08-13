@@ -29,8 +29,8 @@ dependencies {
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.23")
 
-    // Jackson Serialization for Kotlin
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
