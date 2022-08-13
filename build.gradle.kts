@@ -23,7 +23,10 @@ dependencies {
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
 
-    // Serialization
+    // Simple Features GeoJson
+    implementation("mil.nga.sf:sf-geojson:3.1.0")
+
+    // Jackson Serialization for Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Testing
