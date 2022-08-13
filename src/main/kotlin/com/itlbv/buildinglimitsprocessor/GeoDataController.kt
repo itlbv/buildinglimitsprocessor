@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/geodata")
-class GeoDataController {
+class GeoDataController(
+    private val geoDataService: GeoDataService,
+) {
     @PostMapping
-    fun geoData(@RequestBody body: String): ResponseEntity<Any> {
+    fun geoData(@RequestBody geoData: String): ResponseEntity<Any> {
+        geoDataService.processGeoData(geoData)
         return ok("emptyBody")
     }
 }
