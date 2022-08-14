@@ -14,7 +14,7 @@ class GeoDataController(
 ) {
     @PostMapping
     fun geoData(@RequestBody geoData: String): ResponseEntity<Any> {
-        geoDataService.processGeoData(geoData)
+        geoDataService.parseAndSaveGeoData(geoData)
         return ok("emptyBody")
     }
 }

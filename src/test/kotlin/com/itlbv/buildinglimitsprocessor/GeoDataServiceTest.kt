@@ -1,11 +1,14 @@
 package com.itlbv.buildinglimitsprocessor
 
+import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 internal class GeoDataServiceTest {
 
-    private val geoDataService = GeoDataService()
+    private val buildingLimitsService = mockk<BuildingLimitsService>(relaxed = true)
+
+    private val geoDataService = GeoDataService(buildingLimitsService)
 
     @Test
     fun `should parse geoData and send building_limits for saving`() {
