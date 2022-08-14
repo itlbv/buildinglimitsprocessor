@@ -11,10 +11,11 @@ internal class GeoDataServiceTest {
     private val buildingLimitsService = mockk<BuildingLimitsService>(relaxed = true)
     private val heightPlateausService = mockk<HeightPlateausService>(relaxed = true)
 
-    private val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
-
     @Test
     fun `should parse geoData and send building_limits for saving`() {
+        // given
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
+
         // when
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
 
@@ -24,6 +25,9 @@ internal class GeoDataServiceTest {
 
     @Test
     fun `should parse geoData and send height_plateaus for saving`() {
+        // given
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
+
         // when
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
 
@@ -33,6 +37,10 @@ internal class GeoDataServiceTest {
 
     @Test
     fun `should throw when can't parse input`() {
+        // given
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
+
+        // when, then
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_BUILDING_LIMITS_MALFORMED) }
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_NO_BUILDING_LIMITS_FIELD) }
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_HEIGHT_PLATEAUS_MALFORMED) }
