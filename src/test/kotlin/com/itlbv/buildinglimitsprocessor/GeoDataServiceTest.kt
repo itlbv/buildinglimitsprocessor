@@ -1,8 +1,10 @@
 package com.itlbv.buildinglimitsprocessor
 
+import com.itlbv.buildinglimitsprocessor.exceptions.GeoDataProcessingException
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 internal class GeoDataServiceTest {
 
@@ -17,9 +19,8 @@ internal class GeoDataServiceTest {
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
 
         // then
-        verify { buildingLimitsService.save(BUILDING_LIMITS_JSON) }
+        verify { buildingLimitsService.save(BUILDING_LIMITS_STRING) }
     }
-
 
     @Test
     fun `should parse geoData and send height_plateaus for saving`() {
@@ -27,22 +28,54 @@ internal class GeoDataServiceTest {
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
 
         // then
-        verify { heightPlateausService.save(HEIGHT_PLATEAUS) }
+        verify { heightPlateausService.save(HEIGHT_PLATEAUS_STRING) }
+    }
+
+    @Test
+    fun `should throw when can't parse input`() {
+        assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_BUILDING_LIMITS_MALFORMED) }
+        assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_NO_BUILDING_LIMITS_FIELD) }
+        assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_HEIGHT_PLATEAUS_MALFORMED) }
+        assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_NO_HEIGHT_PLATEAUS_FIELD) }
     }
 
     companion object {
-        private val BUILDING_LIMITS_JSON = """
-            {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[10.0,10.0],[20.0,10.0],[20.0,10.0],[20.0,20.0]]]}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[1.0,1.0],[5.0,1.0],[5.0,1.0],[5.0,5.0]]]}}]}
-        """.trim()
+        private const val BUILDING_LIMITS_STRING = "\"BUILDING LIMITS\""
 
-        private val HEIGHT_PLATEAUS = """
-            {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[15.0,15.0,3.0],[25.0,15.0,3.0],[25.0,15.0,3.0],[25.0,25.0,3.0]]]}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[1.0,1.0,2.0],[5.0,1.0,2.0],[5.0,1.0,2.0],[5.0,5.0,2.0]]]}}]}
-        """.trimIndent()
+        private const val HEIGHT_PLATEAUS_STRING = "\"HEIGHT PLATEAUS\""
 
         private val GEODATA_JSON = """
             {
-                "building_limits": $BUILDING_LIMITS_JSON,
-                "height_plateaus": $HEIGHT_PLATEAUS
+                "building_limits": $BUILDING_LIMITS_STRING,
+                "height_plateaus": $HEIGHT_PLATEAUS_STRING
+            }
+        """.trim()
+
+        private val GEODATA_BUILDING_LIMITS_MALFORMED = """
+            {
+                "building_limits"  - MISSING SEMICOLON, MALFORMED JSON
+                "height_plateaus": $HEIGHT_PLATEAUS_STRING
+            }
+        """.trim()
+
+        private val GEODATA_NO_BUILDING_LIMITS_FIELD = """
+            {
+                "buil_FIELD NOT FOUND_mits": $BUILDING_LIMITS_STRING,
+                "height_plateaus": $HEIGHT_PLATEAUS_STRING
+            }
+        """.trim()
+
+        private val GEODATA_HEIGHT_PLATEAUS_MALFORMED = """
+            {
+                "building_limits": $BUILDING_LIMITS_STRING,
+                "height_plateaus"  - MISSING SEMICOLON, MALFORMED JSON
+            }
+        """.trim()
+
+        private val GEODATA_NO_HEIGHT_PLATEAUS_FIELD = """
+            {
+                "building_limits": $BUILDING_LIMITS_STRING,
+                "heig_FIELD NOT FOUND_teaus": $HEIGHT_PLATEAUS_STRING
             }
         """.trim()
     }
