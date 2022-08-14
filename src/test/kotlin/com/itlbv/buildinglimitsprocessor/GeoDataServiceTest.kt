@@ -7,8 +7,9 @@ import org.junit.jupiter.api.Test
 internal class GeoDataServiceTest {
 
     private val buildingLimitsService = mockk<BuildingLimitsService>(relaxed = true)
+    private val heightPlateausService = mockk<HeightPlateausService>(relaxed = true)
 
-    private val geoDataService = GeoDataService(buildingLimitsService)
+    private val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
 
     @Test
     fun `should parse geoData and send building_limits for saving`() {
@@ -30,15 +31,15 @@ internal class GeoDataServiceTest {
     }
 
     companion object {
-        val BUILDING_LIMITS_JSON = """
+        private val BUILDING_LIMITS_JSON = """
             {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[10.0,10.0],[20.0,10.0],[20.0,10.0],[20.0,20.0]]]}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[1.0,1.0],[5.0,1.0],[5.0,1.0],[5.0,5.0]]]}}]}
         """.trim()
 
-        val HEIGHT_PLATEAUS = """
+        private val HEIGHT_PLATEAUS = """
             {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[15.0,15.0,3.0],[25.0,15.0,3.0],[25.0,15.0,3.0],[25.0,25.0,3.0]]]}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[1.0,1.0,2.0],[5.0,1.0,2.0],[5.0,1.0,2.0],[5.0,5.0,2.0]]]}}]}
         """.trimIndent()
 
-        val GEODATA_JSON = """
+        private val GEODATA_JSON = """
             {
                 "building_limits": $BUILDING_LIMITS_JSON,
                 "height_plateaus": $HEIGHT_PLATEAUS
