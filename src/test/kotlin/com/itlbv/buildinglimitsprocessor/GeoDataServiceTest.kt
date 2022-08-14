@@ -19,6 +19,16 @@ internal class GeoDataServiceTest {
         verify { buildingLimitsService.save(BUILDING_LIMITS_JSON) }
     }
 
+
+    @Test
+    fun `should parse geoData and send height_plateaus for saving`() {
+        // when
+        geoDataService.parseAndSaveGeoData(GEODATA_JSON)
+
+        // then
+        verify { heightPlateausService.save(HEIGHT_PLATEAUS) }
+    }
+
     companion object {
         val BUILDING_LIMITS_JSON = """
             {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[10.0,10.0],[20.0,10.0],[20.0,10.0],[20.0,20.0]]]}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[1.0,1.0],[5.0,1.0],[5.0,1.0],[5.0,5.0]]]}}]}
