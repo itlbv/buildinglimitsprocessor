@@ -26,7 +26,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     // Persistence
+    runtimeOnly("org.postgresql:postgresql")
     implementation("com.vladmihalcea:hibernate-types-52:2.17.1")
+    implementation("org.flywaydb:flyway-core")
 
     // Simple Features GeoJson
     implementation("mil.nga.sf:sf-geojson:3.1.0")

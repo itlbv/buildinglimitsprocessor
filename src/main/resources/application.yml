@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: building-limits-processor
+  datasource:
+    username: buildinglimits
+    password: buildinglimitspassword
+    url: jdbc:postgresql://localhost:5011/buildinglimits
