@@ -10,11 +10,12 @@ internal class GeoDataServiceTest {
 
     private val buildingLimitsService = mockk<BuildingLimitsService>(relaxed = true)
     private val heightPlateausService = mockk<HeightPlateausService>(relaxed = true)
+    private val buildingLimitSplitsService = mockk<BuildingLimitSplitsService>(relaxed = true)
 
     @Test
     fun `should parse geoData and send building_limits for saving`() {
         // given
-        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService, buildingLimitSplitsService)
 
         // when
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
@@ -26,7 +27,7 @@ internal class GeoDataServiceTest {
     @Test
     fun `should parse geoData and send height_plateaus for saving`() {
         // given
-        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService, buildingLimitSplitsService)
 
         // when
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
@@ -38,13 +39,25 @@ internal class GeoDataServiceTest {
     @Test
     fun `should throw when can't parse input`() {
         // given
-        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService, buildingLimitSplitsService)
 
         // when, then
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_BUILDING_LIMITS_MALFORMED) }
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_NO_BUILDING_LIMITS_FIELD) }
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_HEIGHT_PLATEAUS_MALFORMED) }
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_NO_HEIGHT_PLATEAUS_FIELD) }
+    }
+
+    @Test
+    fun `should recalculate building limit splits`() {
+        // given
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService, buildingLimitSplitsService)
+
+        // when
+        geoDataService.parseAndSaveGeoData(GEODATA_JSON)
+
+        // then
+        verify { buildingLimitSplitsService.recalculate() }
     }
 
     companion object {
