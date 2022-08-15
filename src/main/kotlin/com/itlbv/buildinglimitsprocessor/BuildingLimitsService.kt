@@ -1,5 +1,6 @@
 package com.itlbv.buildinglimitsprocessor
 
+import com.itlbv.buildinglimitsprocessor.exceptions.BuildingLimitsParsingException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -14,38 +15,62 @@ class BuildingLimitsService(
     private val buildingLimitsRepository: BuildingLimitsRepository,
 ) {
     fun save(buildingLimitsString: String) {
+        val buildingLimitsJsonObject = try {
+            Json.parseToJsonElement(buildingLimitsString)
+        } catch (e: Exception) {
+            throw BuildingLimitsParsingException("Can't parse building limits. Underlying exception is: $e")
+        }.jsonObject
 
-        val buildingLimitsJsonObject = Json.parseToJsonElement(buildingLimitsString).jsonObject
+        val geometries = (buildingLimitsJsonObject["geometries"]
+            ?: throw BuildingLimitsParsingException(
+                "Can't find geometries object when parsing building limits: $buildingLimitsString"
+            ))
+            .jsonArray
 
-        val geometries = buildingLimitsJsonObject["geometries"]?.jsonArray
+        val buildingLimitsToSave = mutableSetOf<BuildingLimit>()
 
-        (0 until (geometries?.size ?: 0)).forEach {
-            val geometry = geometries?.get(it)?.jsonObject
+        (0 until geometries.size).forEach { geoId ->
+            val geometry = geometries[geoId].jsonObject
 
-            val coordinates = geometry?.get("coordinates")?.jsonArray
+            if ("\"Polygon\"" != geometry["type"].toString()) {
+                throw IllegalArgumentException(
+                    "Only Polygon geometry types are accepted. Aborting."
+                )
+            }
 
-            (0 until (coordinates?.size ?: 0)).forEach { coordId ->
-                val points = coordinates?.get(coordId)?.jsonArray
+            val coordinates = (geometry["coordinates"]
+                ?: throw BuildingLimitsParsingException(
+                    "Can't find coordinates object when parsing building limits: $buildingLimitsString"
+                ))
+                .jsonArray
+
+            (0 until coordinates.size).forEach { coordId ->
+                val points = coordinates[coordId].jsonArray
 
                 val polygonPoints = mutableSetOf<Pair<BigDecimal, BigDecimal>>()
 
-                (0 until (points?.size ?: 0)).forEach { pointId ->
-                    val point = points?.get(pointId)?.jsonArray
+                (0 until points.size).forEach { pointId ->
+                    val point = points[pointId].jsonArray
 
                     polygonPoints.add(
                         Pair(
-                            BigDecimal(point?.get(0).toString()),
-                            BigDecimal(point?.get(1).toString()),
+                            BigDecimal(point[0].toString()),
+                            BigDecimal(point[1].toString()),
                         )
                     )
                 }
 
-                val buildingLimit = BuildingLimit(
-                    points = polygonPoints
+                buildingLimitsToSave.add(
+                    BuildingLimit(
+                        points = polygonPoints
+                    )
                 )
-
-                buildingLimitsRepository.save(buildingLimit)
             }
+        }
+
+        buildingLimitsToSave.forEach {
+            logger.info { "Saving building limit: $it" }
+            buildingLimitsRepository.save(it)
         }
     }
 }
