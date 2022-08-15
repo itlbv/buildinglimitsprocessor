@@ -12,6 +12,7 @@ private val logger = KotlinLogging.logger {}
 class GeoDataService(
     private val buildingLimitsService: BuildingLimitsService,
     private val heightPlateausService: HeightPlateausService,
+    private val buildingLimitSplitsService: BuildingLimitSplitsService,
 ) {
     fun parseAndSaveGeoData(geoData: String) {
         logger.info { "Parsing geoData: $geoData" }
@@ -19,6 +20,7 @@ class GeoDataService(
             val geoDataJsonElement = Json.parseToJsonElement(geoData).jsonObject
             buildingLimitsService.save(geoDataJsonElement["building_limits"]!!.toString())
             heightPlateausService.save(geoDataJsonElement["height_plateaus"]!!.toString())
+            buildingLimitSplitsService.recalculate()
         } catch (e: Exception) {
             throw GeoDataProcessingException("Error processing geoData. Underlying exception is: $e")
         }
