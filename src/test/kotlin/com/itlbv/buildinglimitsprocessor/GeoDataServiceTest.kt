@@ -52,18 +52,6 @@ internal class GeoDataServiceTest {
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_NO_HEIGHT_PLATEAUS_FIELD) }
     }
 
-    @Test
-    fun `should recalculate building limit splits`() {
-        // given
-        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
-
-        // when
-        geoDataService.parseAndSaveGeoData(GEODATA_JSON)
-
-        // then
-        verify { buildingLimitSplitsService.calculate() }
-    }
-
     companion object {
         private const val BUILDING_LIMITS_STRING = "\"BUILDING LIMITS\""
 

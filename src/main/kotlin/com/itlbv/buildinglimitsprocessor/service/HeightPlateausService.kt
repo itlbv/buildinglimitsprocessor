@@ -33,7 +33,7 @@ class HeightPlateausService(
             ))
             .jsonArray
 
-        val heightPlateausToSave = mutableSetOf<HeightPlateau>()
+        val heightPlateausToSave = mutableListOf<HeightPlateau>()
 
         (0 until geometries.size).forEach { geoId ->
             val geometry = geometries[geoId].jsonObject
