@@ -1,6 +1,8 @@
-package com.itlbv.buildinglimitsprocessor
+package com.itlbv.buildinglimitsprocessor.service
 
-import com.itlbv.buildinglimitsprocessor.exceptions.HeightPlateausProcessingException
+import com.itlbv.buildinglimitsprocessor.exceptions.HeightPlateausParsingException
+import com.itlbv.buildinglimitsprocessor.model.HeightPlateau
+import com.itlbv.buildinglimitsprocessor.repository.HeightPlateausRepository
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -14,15 +16,19 @@ private val logger = KotlinLogging.logger {}
 class HeightPlateausService(
     private val heightPlateausRepository: HeightPlateausRepository,
 ) {
+    fun getAll(): Iterable<HeightPlateau> = heightPlateausRepository.findAll()
+
     fun save(heightPlateausString: String) {
+        logger.info { "Parsing height plateaus: $heightPlateausString" }
+
         val heightPlateausJsonObject = try {
             Json.parseToJsonElement(heightPlateausString)
         } catch (e: Exception) {
-            throw HeightPlateausProcessingException("Can't parse height plateaus. Underlying exception is: $e")
+            throw HeightPlateausParsingException("Can't parse height plateaus. Nested exception is: $e")
         }.jsonObject
 
         val geometries = (heightPlateausJsonObject["geometries"]
-            ?: throw HeightPlateausProcessingException(
+            ?: throw HeightPlateausParsingException(
                 "Can't find geometries object when parsing height plateaus: $heightPlateausString"
             ))
             .jsonArray
@@ -39,15 +45,15 @@ class HeightPlateausService(
             }
 
             val coordinates = (geometry["coordinates"]
-                ?: throw HeightPlateausProcessingException(
-                    "Can't find coordinates object when parsing building limits: $heightPlateausString"
+                ?: throw HeightPlateausParsingException(
+                    "Can't find coordinates object when parsing height plateaus: $heightPlateausString"
                 ))
                 .jsonArray
 
             (0 until coordinates.size).forEach { coordId ->
                 val points = coordinates[coordId].jsonArray
 
-                val polygonPoints = mutableSetOf<Pair<BigDecimal, BigDecimal>>()
+                val polygonPoints = mutableListOf<Pair<BigDecimal, BigDecimal>>()
 
                 var height: BigDecimal? = null
                 (0 until points.size).forEach { pointId ->
@@ -63,7 +69,9 @@ class HeightPlateausService(
                     if (height == null) {
                         height = BigDecimal(point[2].toString())
                     } else if (height != BigDecimal(point[2].toString())) {
-                        throw HeightPlateausProcessingException("Height in one of provided polygons does not match! Aborting.")
+                        throw HeightPlateausParsingException(
+                            "Height in one of the provided polygons does not match the others! Aborting."
+                        )
                     }
 
                 }
@@ -77,9 +85,11 @@ class HeightPlateausService(
             }
         }
 
-        heightPlateausToSave.forEach {
-            logger.info { "Saving height plateau: $it" }
-            heightPlateausRepository.save(it)
+        if (heightPlateausToSave.isEmpty()) {
+            logger.warn { "No height plateaus to save! Check the input." }
+        } else {
+            logger.info { "Saving height plateaus: $heightPlateausToSave" }
+            heightPlateausRepository.saveAll(heightPlateausToSave)
         }
     }
 }

@@ -1,5 +1,6 @@
-package com.itlbv.buildinglimitsprocessor
+package com.itlbv.buildinglimitsprocessor.repository
 
+import com.itlbv.buildinglimitsprocessor.model.BuildingLimit
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 

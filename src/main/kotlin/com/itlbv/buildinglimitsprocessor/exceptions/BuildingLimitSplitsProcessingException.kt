@@ -1,5 +1,5 @@
 package com.itlbv.buildinglimitsprocessor.exceptions
 
-class HeightPlateausProcessingException(
+class BuildingLimitSplitsProcessingException(
     override val message: String,
 ): RuntimeException(message)

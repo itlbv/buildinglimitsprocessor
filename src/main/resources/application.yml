@@ -5,3 +5,8 @@ spring:
     username: buildinglimits
     password: buildinglimitspassword
     url: jdbc:postgresql://localhost:5011/buildinglimits
+  flyway:
+    user: buildinglimits
+    password: buildinglimitspassword
+    url: jdbc:postgresql://localhost:5011/buildinglimits
+    baseline-on-migrate: true

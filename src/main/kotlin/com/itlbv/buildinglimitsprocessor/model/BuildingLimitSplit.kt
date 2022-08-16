@@ -1,4 +1,4 @@
-package com.itlbv.buildinglimitsprocessor
+package com.itlbv.buildinglimitsprocessor.model
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import org.hibernate.annotations.Type
@@ -13,14 +13,14 @@ import javax.persistence.Id
 
 @Entity
 @TypeDefs(TypeDef(name = "jsonb", typeClass = JsonBinaryType::class))
-data class HeightPlateau(
+data class BuildingLimitSplit(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     val id: Long? = null,
 
     @Type(type = "jsonb")
     @Column(columnDefinition = "json")
-    val points: Set<Pair<BigDecimal, BigDecimal>>,
+    val points: List<Pair<BigDecimal, BigDecimal>>,
 
     val height: BigDecimal
 ) {
@@ -28,7 +28,7 @@ data class HeightPlateau(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as HeightPlateau
+        other as BuildingLimitSplit
 
         if (points != other.points) return false
         if (height != other.height) return false
@@ -43,6 +43,6 @@ data class HeightPlateau(
     }
 
     override fun toString(): String {
-        return "HeightPlateau(id=$id, points=$points, height=$height)"
+        return "BuildingLimitSplit(id=$id, points=$points, height=$height)"
     }
 }

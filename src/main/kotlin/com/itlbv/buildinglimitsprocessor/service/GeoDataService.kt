@@ -1,4 +1,4 @@
-package com.itlbv.buildinglimitsprocessor
+package com.itlbv.buildinglimitsprocessor.service
 
 import com.itlbv.buildinglimitsprocessor.exceptions.GeoDataProcessingException
 import kotlinx.serialization.json.Json
@@ -12,7 +12,6 @@ private val logger = KotlinLogging.logger {}
 class GeoDataService(
     private val buildingLimitsService: BuildingLimitsService,
     private val heightPlateausService: HeightPlateausService,
-    private val buildingLimitSplitsService: BuildingLimitSplitsService,
 ) {
     fun parseAndSaveGeoData(geoData: String) {
         logger.info { "Parsing geoData: $geoData" }
@@ -20,9 +19,8 @@ class GeoDataService(
             val geoDataJsonElement = Json.parseToJsonElement(geoData).jsonObject
             buildingLimitsService.save(geoDataJsonElement["building_limits"]!!.toString())
             heightPlateausService.save(geoDataJsonElement["height_plateaus"]!!.toString())
-            buildingLimitSplitsService.recalculate()
         } catch (e: Exception) {
-            throw GeoDataProcessingException("Error processing geoData. Underlying exception is: $e")
+            throw GeoDataProcessingException("Error processing geoData. Nested exception is: $e")
         }
     }
 }

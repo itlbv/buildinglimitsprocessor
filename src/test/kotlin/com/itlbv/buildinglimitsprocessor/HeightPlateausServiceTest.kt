@@ -1,6 +1,9 @@
 package com.itlbv.buildinglimitsprocessor
 
-import com.itlbv.buildinglimitsprocessor.exceptions.HeightPlateausProcessingException
+import com.itlbv.buildinglimitsprocessor.exceptions.HeightPlateausParsingException
+import com.itlbv.buildinglimitsprocessor.model.HeightPlateau
+import com.itlbv.buildinglimitsprocessor.repository.HeightPlateausRepository
+import com.itlbv.buildinglimitsprocessor.service.HeightPlateausService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -19,7 +22,7 @@ internal class HeightPlateausServiceTest {
         val heightPlateausService = HeightPlateausService(heightPlateausRepository)
 
         val expectedHeightPlateau1 = HeightPlateau(
-            points = setOf(
+            points = listOf(
                 Pair(BigDecimal("15.0"), BigDecimal("15.0")),
                 Pair(BigDecimal("25.0"), BigDecimal("15.0")),
                 Pair(BigDecimal("15.0"), BigDecimal("25.0")),
@@ -28,7 +31,7 @@ internal class HeightPlateausServiceTest {
             height = BigDecimal("10.0"),
         )
         val expectedHeightPlateau2 = HeightPlateau(
-            points = setOf(
+            points = listOf(
                 Pair(BigDecimal("3.0"), BigDecimal("3.0")),
                 Pair(BigDecimal("7.0"), BigDecimal("3.0")),
                 Pair(BigDecimal("3.0"), BigDecimal("7.0")),
@@ -38,7 +41,7 @@ internal class HeightPlateausServiceTest {
         )
 
         every { heightPlateausRepository.save(any()) } returns
-                HeightPlateau(points = setOf(), height = BigDecimal.ZERO)
+                HeightPlateau(points = listOf(), height = BigDecimal.ZERO)
 
         // when
         heightPlateausService.save(HEIGHT_PLATEAUS)
@@ -56,12 +59,12 @@ internal class HeightPlateausServiceTest {
         val heightPlateausService = HeightPlateausService(heightPlateausRepository)
 
         // when, then
-        assertThrows<HeightPlateausProcessingException> {
+        assertThrows<HeightPlateausParsingException> {
             heightPlateausService.save(
                 HEIGHT_PLATEAUS_MALFORMED_JSON
             )
         }
-        assertThrows<HeightPlateausProcessingException> {
+        assertThrows<HeightPlateausParsingException> {
             heightPlateausService.save(
                 HEIGHT_PLATEAUS_BAD_INTERNAL_STRUCTURE
             )
@@ -88,7 +91,7 @@ internal class HeightPlateausServiceTest {
         val heightPlateausService = HeightPlateausService(heightPlateausRepository)
 
         // when, then
-        assertThrows<HeightPlateausProcessingException> {
+        assertThrows<HeightPlateausParsingException> {
             heightPlateausService.save(
                 HEIGHT_PLATEAUS_INCONSISTENT_HEIGHT
             )

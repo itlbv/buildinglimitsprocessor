@@ -32,6 +32,7 @@ dependencies {
 
     // Simple Features GeoJson
     implementation("mil.nga.sf:sf-geojson:3.1.0")
+    implementation("org.locationtech.jts:jts-core:1.19.0")
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.23")

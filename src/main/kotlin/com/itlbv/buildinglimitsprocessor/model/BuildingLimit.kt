@@ -1,4 +1,4 @@
-package com.itlbv.buildinglimitsprocessor
+package com.itlbv.buildinglimitsprocessor.model
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import org.hibernate.annotations.Type
@@ -20,7 +20,7 @@ data class BuildingLimit(
 
     @Type(type = "jsonb")
     @Column(columnDefinition = "json")
-    val points: Set<Pair<BigDecimal, BigDecimal>>
+    val points: List<Pair<BigDecimal, BigDecimal>>
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

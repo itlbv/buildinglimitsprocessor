@@ -1,6 +1,9 @@
 package com.itlbv.buildinglimitsprocessor
 
 import com.itlbv.buildinglimitsprocessor.exceptions.BuildingLimitsParsingException
+import com.itlbv.buildinglimitsprocessor.model.BuildingLimit
+import com.itlbv.buildinglimitsprocessor.repository.BuildingLimitsRepository
+import com.itlbv.buildinglimitsprocessor.service.BuildingLimitsService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -19,7 +22,7 @@ internal class BuildingLimitsServiceTest {
         val buildingLimitsService = BuildingLimitsService(buildingLimitsRepository)
 
         val expectedBuildingLimit1 = BuildingLimit(
-            points = setOf(
+            points = listOf(
                 Pair(BigDecimal("10.0"), BigDecimal("10.0")),
                 Pair(BigDecimal("20.0"), BigDecimal("10.0")),
                 Pair(BigDecimal("10.0"), BigDecimal("20.0")),
@@ -27,7 +30,7 @@ internal class BuildingLimitsServiceTest {
             )
         )
         val expectedBuildingLimit2 = BuildingLimit(
-            points = setOf(
+            points = listOf(
                 Pair(BigDecimal("1.0"), BigDecimal("1.0")),
                 Pair(BigDecimal("5.0"), BigDecimal("1.0")),
                 Pair(BigDecimal("1.0"), BigDecimal("5.0")),
@@ -35,7 +38,7 @@ internal class BuildingLimitsServiceTest {
             )
         )
 
-        every { buildingLimitsRepository.save(any()) } returns BuildingLimit(points = setOf())
+        every { buildingLimitsRepository.save(any()) } returns BuildingLimit(points = listOf())
 
         // when
         buildingLimitsService.save(BUILDING_LIMITS)

@@ -1,6 +1,8 @@
-package com.itlbv.buildinglimitsprocessor
+package com.itlbv.buildinglimitsprocessor.service
 
 import com.itlbv.buildinglimitsprocessor.exceptions.BuildingLimitsParsingException
+import com.itlbv.buildinglimitsprocessor.model.BuildingLimit
+import com.itlbv.buildinglimitsprocessor.repository.BuildingLimitsRepository
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -14,11 +16,15 @@ private val logger = KotlinLogging.logger {}
 class BuildingLimitsService(
     private val buildingLimitsRepository: BuildingLimitsRepository,
 ) {
+    fun getAll(): Iterable<BuildingLimit> = buildingLimitsRepository.findAll()
+
     fun save(buildingLimitsString: String) {
+        logger.info { "Parsing building limits: $buildingLimitsString" }
+
         val buildingLimitsJsonObject = try {
             Json.parseToJsonElement(buildingLimitsString)
         } catch (e: Exception) {
-            throw BuildingLimitsParsingException("Can't parse building limits. Underlying exception is: $e")
+            throw BuildingLimitsParsingException("Can't parse building limits. Nested exception is: $e")
         }.jsonObject
 
         val geometries = (buildingLimitsJsonObject["geometries"]
@@ -47,7 +53,7 @@ class BuildingLimitsService(
             (0 until coordinates.size).forEach { coordId ->
                 val points = coordinates[coordId].jsonArray
 
-                val polygonPoints = mutableSetOf<Pair<BigDecimal, BigDecimal>>()
+                val polygonPoints = mutableListOf<Pair<BigDecimal, BigDecimal>>()
 
                 (0 until points.size).forEach { pointId ->
                     val point = points[pointId].jsonArray
@@ -68,9 +74,11 @@ class BuildingLimitsService(
             }
         }
 
-        buildingLimitsToSave.forEach {
-            logger.info { "Saving building limit: $it" }
-            buildingLimitsRepository.save(it)
+        if (buildingLimitsToSave.isEmpty()) {
+            logger.warn { "No building limits to save! Check the input." }
+        } else {
+            logger.info { "Saving building limits: $buildingLimitsToSave" }
+            buildingLimitsRepository.saveAll(buildingLimitsToSave)
         }
     }
 }

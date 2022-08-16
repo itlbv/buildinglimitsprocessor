@@ -1,6 +1,10 @@
 package com.itlbv.buildinglimitsprocessor
 
 import com.itlbv.buildinglimitsprocessor.exceptions.GeoDataProcessingException
+import com.itlbv.buildinglimitsprocessor.service.BuildingLimitSplitsService
+import com.itlbv.buildinglimitsprocessor.service.BuildingLimitsService
+import com.itlbv.buildinglimitsprocessor.service.GeoDataService
+import com.itlbv.buildinglimitsprocessor.service.HeightPlateausService
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -57,7 +61,7 @@ internal class GeoDataServiceTest {
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
 
         // then
-        verify { buildingLimitSplitsService.recalculate() }
+        verify { buildingLimitSplitsService.calculate() }
     }
 
     companion object {
