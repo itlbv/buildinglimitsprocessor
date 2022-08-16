@@ -20,7 +20,7 @@ data class BuildingLimit(
 
     @Type(type = "jsonb")
     @Column(columnDefinition = "json")
-    val points: List<Pair<BigDecimal, BigDecimal>>
+    val points: List<Array<BigDecimal>>
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -20,7 +20,7 @@ data class BuildingLimitSplit(
 
     @Type(type = "jsonb")
     @Column(columnDefinition = "json")
-    val points: List<Pair<BigDecimal, BigDecimal>>,
+    val points: List<Array<BigDecimal>>,
 
     val height: BigDecimal
 ) {

@@ -36,8 +36,8 @@ class BuildingLimitSplitsService(
 
             val coordBuildingLimitList = buildingLimit.points.map {
                 Coordinate(
-                    it.first.toDouble(),
-                    it.second.toDouble()
+                    it[0].toDouble(),
+                    it[1].toDouble()
                 )
             }.toMutableList()
             coordBuildingLimitList.add(0, coordBuildingLimitList.last().copy())
@@ -59,8 +59,8 @@ class BuildingLimitSplitsService(
 
                 val coordHeightPlateauList = heightPlateau.points.map {
                     Coordinate(
-                        it.first.toDouble(),
-                        it.second.toDouble()
+                        it[0].toDouble(),
+                        it[1].toDouble()
                     )
                 }.toMutableList()
                 coordHeightPlateauList.add(0, coordHeightPlateauList.last().copy())
@@ -80,7 +80,7 @@ class BuildingLimitSplitsService(
                     val geometry = buildingLimitPolygon.intersection(heightPlateauPolygon)
 
                     val pointBuildingLimitSplit =
-                        geometry.coordinates.map { Pair(BigDecimal(it.x), BigDecimal(it.y)) }.toMutableList()
+                        geometry.coordinates.map { arrayOf(BigDecimal(it.x), BigDecimal(it.y)) }.toMutableList()
                     pointBuildingLimitSplit.removeLast()
 
                     val buildingLimitSplit = BuildingLimitSplit(

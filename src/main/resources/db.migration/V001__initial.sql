@@ -18,6 +18,6 @@ create table height_plateau
 create table building_limit_split
 (
     id      BIGINT PRIMARY KEY DEFAULT nextval('hibernate_sequence'),
-    points  TEXT NOT NULL,
+    points  JSONB NOT NULL,
     height  NUMERIC(19, 2) NOT NULL
 );

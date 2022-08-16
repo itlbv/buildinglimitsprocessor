@@ -23,18 +23,18 @@ internal class BuildingLimitsServiceTest {
 
         val expectedBuildingLimit1 = BuildingLimit(
             points = listOf(
-                Pair(BigDecimal("10.0"), BigDecimal("10.0")),
-                Pair(BigDecimal("20.0"), BigDecimal("10.0")),
-                Pair(BigDecimal("10.0"), BigDecimal("20.0")),
-                Pair(BigDecimal("20.0"), BigDecimal("20.0")),
+                arrayOf(BigDecimal("10.0"), BigDecimal("10.0")),
+                arrayOf(BigDecimal("20.0"), BigDecimal("10.0")),
+                arrayOf(BigDecimal("10.0"), BigDecimal("20.0")),
+                arrayOf(BigDecimal("20.0"), BigDecimal("20.0")),
             )
         )
         val expectedBuildingLimit2 = BuildingLimit(
             points = listOf(
-                Pair(BigDecimal("1.0"), BigDecimal("1.0")),
-                Pair(BigDecimal("5.0"), BigDecimal("1.0")),
-                Pair(BigDecimal("1.0"), BigDecimal("5.0")),
-                Pair(BigDecimal("5.0"), BigDecimal("5.0")),
+                arrayOf(BigDecimal("1.0"), BigDecimal("1.0")),
+                arrayOf(BigDecimal("5.0"), BigDecimal("1.0")),
+                arrayOf(BigDecimal("1.0"), BigDecimal("5.0")),
+                arrayOf(BigDecimal("5.0"), BigDecimal("5.0")),
             )
         )
 

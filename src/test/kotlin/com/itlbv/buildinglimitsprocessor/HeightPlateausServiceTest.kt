@@ -23,19 +23,19 @@ internal class HeightPlateausServiceTest {
 
         val expectedHeightPlateau1 = HeightPlateau(
             points = listOf(
-                Pair(BigDecimal("15.0"), BigDecimal("15.0")),
-                Pair(BigDecimal("25.0"), BigDecimal("15.0")),
-                Pair(BigDecimal("15.0"), BigDecimal("25.0")),
-                Pair(BigDecimal("25.0"), BigDecimal("25.0")),
+                arrayOf(BigDecimal("15.0"), BigDecimal("15.0")),
+                arrayOf(BigDecimal("25.0"), BigDecimal("15.0")),
+                arrayOf(BigDecimal("15.0"), BigDecimal("25.0")),
+                arrayOf(BigDecimal("25.0"), BigDecimal("25.0")),
             ),
             height = BigDecimal("10.0"),
         )
         val expectedHeightPlateau2 = HeightPlateau(
             points = listOf(
-                Pair(BigDecimal("3.0"), BigDecimal("3.0")),
-                Pair(BigDecimal("7.0"), BigDecimal("3.0")),
-                Pair(BigDecimal("3.0"), BigDecimal("7.0")),
-                Pair(BigDecimal("7.0"), BigDecimal("7.0")),
+                arrayOf(BigDecimal("3.0"), BigDecimal("3.0")),
+                arrayOf(BigDecimal("7.0"), BigDecimal("3.0")),
+                arrayOf(BigDecimal("3.0"), BigDecimal("7.0")),
+                arrayOf(BigDecimal("7.0"), BigDecimal("7.0")),
             ),
             height = BigDecimal("1.0")
         )

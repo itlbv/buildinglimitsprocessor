@@ -53,13 +53,13 @@ class BuildingLimitsService(
             (0 until coordinates.size).forEach { coordId ->
                 val points = coordinates[coordId].jsonArray
 
-                val polygonPoints = mutableListOf<Pair<BigDecimal, BigDecimal>>()
+                val polygonPoints = mutableListOf<Array<BigDecimal>>()
 
                 (0 until points.size).forEach { pointId ->
                     val point = points[pointId].jsonArray
 
                     polygonPoints.add(
-                        Pair(
+                        arrayOf(
                             BigDecimal(point[0].toString()),
                             BigDecimal(point[1].toString()),
                         )

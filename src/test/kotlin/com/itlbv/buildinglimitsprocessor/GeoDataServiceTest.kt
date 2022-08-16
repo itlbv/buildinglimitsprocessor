@@ -19,7 +19,7 @@ internal class GeoDataServiceTest {
     @Test
     fun `should parse geoData and send building_limits for saving`() {
         // given
-        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService, buildingLimitSplitsService)
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
 
         // when
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
@@ -31,7 +31,7 @@ internal class GeoDataServiceTest {
     @Test
     fun `should parse geoData and send height_plateaus for saving`() {
         // given
-        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService, buildingLimitSplitsService)
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
 
         // when
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
@@ -43,7 +43,7 @@ internal class GeoDataServiceTest {
     @Test
     fun `should throw when can't parse input`() {
         // given
-        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService, buildingLimitSplitsService)
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
 
         // when, then
         assertThrows<GeoDataProcessingException> { geoDataService.parseAndSaveGeoData(GEODATA_BUILDING_LIMITS_MALFORMED) }
@@ -55,7 +55,7 @@ internal class GeoDataServiceTest {
     @Test
     fun `should recalculate building limit splits`() {
         // given
-        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService, buildingLimitSplitsService)
+        val geoDataService = GeoDataService(buildingLimitsService, heightPlateausService)
 
         // when
         geoDataService.parseAndSaveGeoData(GEODATA_JSON)
