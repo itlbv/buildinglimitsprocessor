@@ -1,4 +1,4 @@
-package com.itlbv.buildinglimitsprocessor
+package com.itlbv.buildinglimitsprocessor.controller
 
 import com.itlbv.buildinglimitsprocessor.service.GeoDataService
 import org.springframework.http.ResponseEntity

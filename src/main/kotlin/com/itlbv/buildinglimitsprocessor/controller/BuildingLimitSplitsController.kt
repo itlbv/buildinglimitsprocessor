@@ -1,4 +1,4 @@
-package com.itlbv.buildinglimitsprocessor
+package com.itlbv.buildinglimitsprocessor.controller
 
 import com.itlbv.buildinglimitsprocessor.model.BuildingLimitSplit
 import com.itlbv.buildinglimitsprocessor.service.BuildingLimitSplitsService
