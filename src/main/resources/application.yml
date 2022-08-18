@@ -10,3 +10,9 @@ spring:
     password: buildinglimitspassword
     url: jdbc:postgresql://localhost:5011/buildinglimits
     baseline-on-migrate: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
