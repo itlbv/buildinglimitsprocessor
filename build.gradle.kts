@@ -1,3 +1,4 @@
+import org.gradle.api.internal.java.WebApplication
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -6,6 +7,7 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.5.21"
+    war
 }
 
 group = "com.itlbv"
@@ -16,6 +18,8 @@ repositories {
     mavenCentral()
 }
 
+war {}
+
 dependencies {
     // Standard Kotlin dependencies
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -24,6 +28,8 @@ dependencies {
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     // Persistence
     runtimeOnly("org.postgresql:postgresql")
